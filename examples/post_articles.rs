@@ -65,8 +65,8 @@ async fn main() {
     let app = Router::new()
         .route("/", get(index))
         .route("/articles", get(get_article)
-                                    .post(post_article)
-                                    .layer(Extension(db)))
+                            .post(post_article)
+                            .layer(Extension(db)))
         .route("/login", post(login));
 
     let addr = SocketAddr::from(([127,0,0,1], 8888));
