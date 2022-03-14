@@ -50,7 +50,7 @@ impl Settings {
 async fn main() {}
 
 #[cfg(test)]
-mod tests {
+mod test_settings {
     use super::*;
 
     // the environment vaiable is shared in testing, be careful
@@ -59,17 +59,18 @@ mod tests {
         std::env::remove_var("RUN_ENV");
         std::env::set_var("RUN_ENV", "prod");
 
-        println!("the current env {:?}", std::env::var("RUN_ENV"));
+        assert_eq!(std::env::var("RUN_ENV").unwrap(), "prod");
         let settings = Settings::new();
-        println!("prod settings {:#?}", settings);
+        assert_eq!(settings.unwrap().server.url.contains("prod"), true);
     }
 
-    #[test]
-    fn test_settings_default() {
-        std::env::remove_var("RUN_ENV");
+    // #[test]
+    // fn test_settings_dev() {
+    //     std::env::remove_var("RUN_ENV");
+    //     std::env::set_var("RUN_ENV", "dev");
 
-        println!("the current env {:?}", std::env::var("RUN_ENV"));
-        let settings = Settings::new();
-        println!("default settings {:#?}", settings);
-    }
+    //     assert_eq!(std::env::var("RUN_ENV").unwrap(), "dev");
+    //     let settings = Settings::new();
+    //     assert_eq!(settings.unwrap().server.url.contains("dev"), true);
+    // }
 }
