@@ -1,0 +1,6 @@
+[log]
+level = "debug"
+
+[server]
+port = "8888"
+url = "http://prod.server:8888"

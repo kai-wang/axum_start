@@ -1,0 +1,10 @@
+[[rules]]
+    name = "all"
+    rule_set = [
+        ">10",
+        "<100",
+    ]
+
+[server]
+port = "8888"
+url = "http://uat.server:8888"
