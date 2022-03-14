@@ -10,7 +10,10 @@ axum = { version = "0.4.8", features = ["headers"] }
 tokio = { version = "1", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 jsonwebtoken = "8"
+uuid = { version = "0.8.1", features = ["v4"] }
+fake = { version = "2.4", features = ["derive"] }
+rand = "0.8"
 
 [[bin]]
 name = "basic"
-path = "exa/basic.rs"
+path = "examples/post_articles.rs"
