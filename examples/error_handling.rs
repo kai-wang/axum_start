@@ -109,7 +109,12 @@ mod tests {
         IOError(#[from] std::io::Error),
 
         #[error("db error on table {table:?}, row {row:?})")]
-        DBError { table: String, row: String },
+        DBError {
+            table: String,
+            row: String,
+            #[source]
+            source: anyhow::Error,
+        },
     }
 
     pub fn make_io_error() -> Result<(), CustomError> {
@@ -120,6 +125,7 @@ mod tests {
         Err(CustomError::DBError {
             table: "account".to_string(),
             row: "name".to_string(),
+            source: anyhow::anyhow!("test"),
         })
     }
 
@@ -139,13 +145,11 @@ mod tests {
     #[test]
     pub fn test_db_error() -> Result<(), CustomError> {
         let dbErr = make_db_error();
-        match dbErr {
-            Ok(_) => Ok(()),
-            Err(e) => {
-                // The error type is an anyhow::Error
-                println!("{}", e);
-                Ok(())
-            }
+        if let Err(CustomError::DBError { table, row, source }) = dbErr {
+            println!("{:?}, {:?}, {:?}", table, row, source);
+            Ok(())
+        } else {
+            Ok(())
         }
     }
 }
