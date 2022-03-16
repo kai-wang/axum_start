@@ -3,6 +3,8 @@ async fn main() {}
 
 #[cfg(test)]
 mod tests {
+    use std::error::Error;
+
     use anyhow::{Context, Result};
     use thiserror::Error;
 
@@ -96,6 +98,52 @@ mod tests {
                     e.source(),
                     e.to_string()
                 );
+                Ok(())
+            }
+        }
+    }
+
+    #[derive(Debug, thiserror::Error)]
+    pub enum CustomError {
+        #[error("io error: {0}")]
+        IOError(#[from] std::io::Error),
+
+        #[error("db error on table {table:?}, row {row:?})")]
+        DBError { table: String, row: String },
+    }
+
+    pub fn make_io_error() -> Result<(), CustomError> {
+        Ok(std::fs::remove_file("/this/file/does/not/exist")?)
+    }
+
+    pub fn make_db_error() -> Result<(), CustomError> {
+        Err(CustomError::DBError {
+            table: "account".to_string(),
+            row: "name".to_string(),
+        })
+    }
+
+    #[test]
+    pub fn test_io_error() -> Result<(), CustomError> {
+        let err = make_io_error();
+        match err {
+            Ok(_) => Ok(()),
+            Err(e) => {
+                // The error type is an anyhow::Error
+                println!("{:?}", e.to_string());
+                Ok(())
+            }
+        }
+    }
+
+    #[test]
+    pub fn test_db_error() -> Result<(), CustomError> {
+        let dbErr = make_db_error();
+        match dbErr {
+            Ok(_) => Ok(()),
+            Err(e) => {
+                // The error type is an anyhow::Error
+                println!("{}", e);
                 Ok(())
             }
         }
