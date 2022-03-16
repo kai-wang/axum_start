@@ -15,18 +15,17 @@ mod tests {
             std::fs::read(path).with_context(|| format!("failed to read instrs from {}", path));
 
         assert_eq!(content.is_err(), true);
-        match content {
-            Ok(_) => Ok(()),
-            Err(msg) => {
-                println!(
-                    "error source is {:?} \nerror message is {:?}",
-                    msg.source(),
-                    msg.to_string()
-                );
+        if let Err(e) = content {
+            println!(
+                "error source is {:?} \nerror message is {:?}",
+                e.source(),
+                e.to_string()
+            );
 
-                println!("the error type is {}", msg);
-                Ok(())
-            }
+            println!("the error type is {}", e);
+            Ok(())
+        } else {
+            Ok(())
         }
     }
 
@@ -89,17 +88,15 @@ mod tests {
         let err =
             get_missing_attr_error().with_context(|| format!("a custom missing attribute error"));
 
-        match err {
-            Ok(_) => Ok(()),
-            Err(e) => {
-                // The error type is an anyhow::Error
-                println!(
-                    "error source is {:?} \nerror message is {:?}",
-                    e.source(),
-                    e.to_string()
-                );
-                Ok(())
-            }
+        if let Err(e) = err {
+            println!(
+                "error source is {:?} \nerror message is {:?}",
+                e.source(),
+                e.to_string()
+            );
+            Ok(())
+        } else {
+            Ok(())
         }
     }
 
@@ -131,8 +128,7 @@ mod tests {
 
     #[test]
     pub fn test_io_error() -> Result<(), CustomError> {
-        let err = make_io_error();
-        match err {
+        match make_io_error() {
             Ok(_) => Ok(()),
             Err(e) => {
                 // The error type is an anyhow::Error
