@@ -75,7 +75,27 @@ mod tests {
         match get_invalid_header_error() {
             Ok(_) => Ok(()),
             Err(e) => {
+                // This is a formatError;
                 println!("error source is {:?} ", e);
+                Ok(())
+            }
+        }
+    }
+
+    #[test]
+    pub fn test_anyhow_with_thiserror() -> Result<(), FormatError> {
+        let err =
+            get_missing_attr_error().with_context(|| format!("a custom missing attribute error"));
+
+        match err {
+            Ok(_) => Ok(()),
+            Err(e) => {
+                // The error type is an anyhow::Error
+                println!(
+                    "error source is {:?} \nerror message is {:?}",
+                    e.source(),
+                    e.to_string()
+                );
                 Ok(())
             }
         }
