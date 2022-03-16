@@ -119,6 +119,7 @@ dependencies = [
 name = "axum_start"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "axum",
  "config",
  "fake",
@@ -127,6 +128,7 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
+ "thiserror",
  "tokio",
  "tracing",
  "tracing-bunyan-formatter",
